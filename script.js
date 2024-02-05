@@ -1,4 +1,9 @@
+let resultDiv = document.querySelector("#result");
+let scoreDiv = document.querySelector("#score");
 
+let buttons = document.querySelectorAll("button")
+
+let Resetbtn = document.querySelector("#reset");
 
 // Functions declaration
 
@@ -35,42 +40,48 @@ function getComputerChoice(){
  function playGame() {
      let playerScore = 0;
      let computerScore = 0;
+     let round = 1;
  
-     for(i=1; i<=5; i++){
-       let  readlineSync = require("readline-sync");
-       const playerSelection = readlineSync.question("Enter your choice(rock, paper or scissor)").toLowerCase();
-       const computerSelection = getComputerChoice();
- 
-       console.log(`round: ${i}`);
-       console.log(`player chose ${playerSelection}`);
-       console.log(`computer chose ${computerSelection}`);
- 
-       let result = playRound(playerSelection, computerSelection);
-       console.log(result);
- 
-       if(result.includes("Win")){
-         playerScore++;
-       } else if (result.includes("Lose")){
-         computerScore++;
-       }
-     }
- 
- 
-         console.log("\nGame Over!");
-         console.log(`playerscore is: ${playerScore}`);
-         console.log(`computerscore is: ${computerScore}`);
- 
-         if(playerScore > computerScore) {
-             console.log("Congratulations! You win the game!");
-         } else if (computerScore > playerScore){
-             console.log("Sorry, You Lose! the game. Better luck next time!");
-         } else {
-             console.log("The game is a tie!");
- }
- }
- 
+    buttons.forEach(button => {
+      button.addEventListener('click', function(){
+        if (round <=5) {
+        const playerSelection = button.id;
+        const computerSelection = getComputerChoice();
+        const result = playRound(playerSelection, computerSelection);
+
+        resultDiv.textContent = `Round ${round}: ${result}`;
+        round++;
+
+        if(result.includes("Win")){
+          playerScore++;
+        } else if (result.includes("Lose")){
+          computerScore++;
+        }
+
+        scoreDiv.textContent = `Player: ${playerScore}, Computer: ${computerScore}`;
+        if(round > 5){
+          if(playerScore === 5){
+            resultDiv.textContent = 'Congratulations! You win the game!';
+          } else if (computerScore === 5){
+            resultDiv.textContent = 'Sorry, You Lose! the game. Better luck next time'
+          } 
+          Resetbtn.style.display = 'block';
+        }
+      }
+      })
+
+    })
+  }
+
+  Resetbtn.addEventListener('click', function(){
+    round =1;
+    playerScore =0;
+    computerScore =0;
+    resultDiv.textContent = "";
+    scoreDiv.textContent = "player: 0, computer: 0";
+    Resetbtn.style.display = 'none';
+    playGame();
+  })
  
  playGame();
- 
- 
  
